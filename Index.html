@@ -1,1 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Random Fun Facts</title>
+  <style>
+    :root{--bg:#f6f9ff;--card:#ffffff;--accent:#3b82f6;--muted:#6b7280}
+    html,body{height:100%;margin:0;font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial}
+    body{display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,var(--bg),#eef2ff);padding:32px}
+    .card{background:var(--card);max-width:720px;width:100%;padding:36px;border-radius:12px;box-shadow:0 8px 24px rgba(15,23,42,0.06);text-align:center}
+    h1{margin:0 0 12px;font-size:1.6rem;color:#0f172a}
+    p.lead{margin:0 0 20px;color:var(--muted);font-size:1rem}
+    #fact{font-size:1.25rem;margin:20px 0;padding:18px;border-radius:10px;background:linear-gradient(90deg,#fff 0%,#fbfbff 100%);box-shadow:inset 0 1px 0 rgba(255,255,255,0.6)}
+    button{background:var(--accent);color:white;border:0;padding:12px 18px;border-radius:8px;font-size:1rem;cursor:pointer}
+    button:active{transform:translateY(1px)}
+    .small{font-size:0.85rem;color:var(--muted);margin-top:14px}
+    .fade{transition:opacity .25s ease, transform .25s ease}
+    .hidden{opacity:0;transform:translateY(6px)}
+  </style>
+</head>
+<body>
+  <main class="card" role="main">
+    <h1>Random Fun Facts</h1>
+    <p class="lead">Click the button to reveal a different random fun fact. Try it a few times — you might learn something new!</p>
 
+    <div id="fact" class="fade" aria-live="polite"></div>
+
+    <button id="showFactButton" type="button">Show Another Fact</button>
+
+    <div class="small">Tip: Keep clicking to cycle through the facts. The same fact won't show twice in a row.</div>
+  </main>
+
+  <script>
+    (function () {
+      const facts = [
+        'Honey never spoils — archaeologists have found edible honey in ancient Egyptian tombs!',
+        'A day on Venus is longer than a year on Venus.',
+        'Bananas are berries, but strawberries are not.',
+        'There are more possible iterations of a game of chess than atoms in the known universe.',
+        'Octopuses have three hearts and blue blood.',
+        'The Eiffel Tower can be 15 cm taller during hot days due to thermal expansion.',
+        'Wombat poop is cube-shaped.',
+        'Some turtles can breathe through their butts (cloacal respiration).',
+        'A group of flamingos is called a "flamboyance".',
+        'Scotland’s national animal is the unicorn.'
+      ];
+
+      const factEl = document.getElementById('fact');
+      const btn = document.getElementById('showFactButton');
+
+      let currentIndex = -1;
+
+      function pickRandomIndexDifferentFrom(excludeIndex) {
+        if (facts.length === 0) return -1;
+        if (facts.length === 1) return 0;
+        let idx;
+        do {
+          idx = Math.floor(Math.random() * facts.length);
+        } while (idx === excludeIndex);
+        return idx;
+      }
+
+      function showFact(index) {
+        factEl.classList.add('hidden');
+        // Wait for the CSS transition to make a nicer swap
+        setTimeout(() => {
+          currentIndex = index;
+          factEl.textContent = facts[index];
+          factEl.classList.remove('hidden');
+        }, 180);
+      }
+
+      btn.addEventListener('click', () => {
+        const next = pickRandomIndexDifferentFrom(currentIndex);
+        if (next !== -1) showFact(next);
+        btn.focus();
+      });
+
+      // Initialize with a random fact
+      const start = pickRandomIndexDifferentFrom(-1);
+      if (start !== -1) showFact(start);
+    })();
+  </script>
+</body>
+</html>
